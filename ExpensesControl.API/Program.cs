@@ -13,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<PgSqlDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("ExpensesControl")));
 builder.Services.AddScoped<ICreditBucketService, CreditBucketService>();
+builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();

@@ -12,6 +12,7 @@ public class BucketEntity
     public DateTime LastPaymentDate { get; set; }
     public int PaymentDaysLimit { get; set; }
     public decimal AmountNoInterest { get; set; }
+    public decimal AmountMinimum { get; set; }
     public decimal TotalDebt { get; set; }
     public BucketTypeEnum BucketType { get; set; }
     public bool Active { get; set; }

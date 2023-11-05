@@ -8,7 +8,7 @@ public class CreditBucketModel : BucketModel
     public int PaymentDaysLimit { get; set; }
     public decimal AmountNoInterests { get; set; }
     public decimal AmountMinimum { get; set; }
-    public DateTime? LastPayment { get; set; }
+    public DateTime LastPayment { get; set; }
     public DateTime NextPaymentDueDate { get; set; }
     public decimal TotalDebt { get; set; }
 }

@@ -1,13 +1,17 @@
 using ExpensesControl.API.Models;
+using ExpensesControl.Rdb;
+using ExpensesControl.Rdb.Entities;
 
 namespace ExpensesControl.API.Services;
 
 public class CreditBucketService : ICreditBucketService
 {
     private readonly IList<CreditBucketModel> _creditBucketModels;
+    private readonly UnitOfWork _unitOfWork;
 
-    public CreditBucketService()
+    public CreditBucketService(UnitOfWork unitOfWork)
     {
+        _unitOfWork = unitOfWork;
         _creditBucketModels = new List<CreditBucketModel>()
         {
             new CreditBucketModel()
@@ -67,29 +71,62 @@ public class CreditBucketService : ICreditBucketService
     }
     public IList<CreditBucketModel> Get()
     {
-        return _creditBucketModels.Where(cb => cb.Active).ToList();
+        var entities = _unitOfWork.BucketRepository.Get();
+        var ans = new List<CreditBucketModel>();
+        foreach (var entity in entities)
+        {
+            var model =new CreditBucketModel()
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Balance = entity.Balance,
+                CutDate = entity.CutDate,
+                Available = entity.Available,
+                LastMovementDate = entity.LastUpdatedDate,
+                LastPayment = entity.LastPaymentDate,
+                PaymentDaysLimit = entity.PaymentDaysLimit,
+                AmountMinimum = entity.AmountMinimum,
+                AmountNoInterests = entity.AmountNoInterest,
+                TotalDebt = entity.TotalDebt,
+                CreateDate = entity.CreatedDate,
+                LastUpdatedDate = entity.LastPaymentDate,
+                NextPaymentDueDate = entity.LastPaymentDate.AddMonths(1),
+                Active = entity.Active
+            };
+            ans.Add(model);
+        }
+        return ans;
     }
 
     public CreditBucketModel? Get(int id)
     {
+        var entity = _unitOfWork.BucketRepository.Get(b => b.Active && b.Id == id).FirstOrDefault();
+        
         var ans = _creditBucketModels.FirstOrDefault(cb => cb.Id == id && cb.Active); 
         return ans;
     }
 
     public CreditBucketModel? CreateBucket(CreditBucketModel creditBucket)
     {
-        var lastBucket = _creditBucketModels.LastOrDefault();
-        if (lastBucket != null)
+        var entity = new BucketEntity()
         {
-            lastBucket.Id = lastBucket.Id++;
-            lastBucket.NextPaymentDueDate = lastBucket.NextPaymentDueDate.AddDays(10);
-            lastBucket.LastPayment = lastBucket.LastPayment?.AddDays(10);
-            lastBucket.LastMovementDate = lastBucket.LastMovementDate.AddDays(10);
-            lastBucket.LastUpdatedDate = new DateTime();
-            _creditBucketModels.Add(lastBucket);
-            return lastBucket;
-        }
-
+            Active = creditBucket.Active,
+            Available = creditBucket.Available,
+            AmountMinimum = creditBucket.AmountMinimum,
+            TotalDebt = creditBucket.TotalDebt,
+            Balance = creditBucket.Balance,
+            CutDate = creditBucket.CutDate,
+            LastUpdatedDate = creditBucket.LastUpdatedDate,
+            PaymentDaysLimit = creditBucket.PaymentDaysLimit,
+            Name = creditBucket.Name,
+            Id = creditBucket.Id,
+            CreatedDate = creditBucket.CreateDate,
+            LastPaymentDate = creditBucket.LastPayment,
+            AmountNoInterest = creditBucket.AmountNoInterests,
+            BucketType = BucketTypeEnum.CreditBucket
+        };
+        _unitOfWork.BucketRepository.Insert(entity);
+        _unitOfWork.Save();
         return null;
     }
 

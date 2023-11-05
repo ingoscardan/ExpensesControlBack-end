@@ -14,6 +14,6 @@ public class PgSqlDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        new BucketEntityConfiguration();
+        new BucketEntityConfiguration().Configure(modelBuilder.Entity<BucketEntity>());
     }
 }

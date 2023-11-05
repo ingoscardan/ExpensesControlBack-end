@@ -1,4 +1,5 @@
 using System.Configuration;
+using System.Reflection;
 using ExpensesControl.API.Services;
 using ExpensesControl.Rdb;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<PgSqlDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("ExpensesControl")));
 builder.Services.AddScoped<ICreditBucketService, CreditBucketService>();
 builder.Services.AddScoped<UnitOfWork>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();

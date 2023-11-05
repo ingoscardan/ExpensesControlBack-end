@@ -1,3 +1,4 @@
+using AutoMapper;
 using ExpensesControl.API.Models;
 using ExpensesControl.Rdb;
 using ExpensesControl.Rdb.Entities;
@@ -8,10 +9,12 @@ public class CreditBucketService : ICreditBucketService
 {
     private readonly IList<CreditBucketModel> _creditBucketModels;
     private readonly UnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public CreditBucketService(UnitOfWork unitOfWork)
+    public CreditBucketService(UnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
         _creditBucketModels = new List<CreditBucketModel>()
         {
             new CreditBucketModel()
@@ -75,24 +78,7 @@ public class CreditBucketService : ICreditBucketService
         var ans = new List<CreditBucketModel>();
         foreach (var entity in entities)
         {
-            var model =new CreditBucketModel()
-            {
-                Id = entity.Id,
-                Name = entity.Name,
-                Balance = entity.Balance,
-                CutDate = entity.CutDate,
-                Available = entity.Available,
-                LastMovementDate = entity.LastUpdatedDate,
-                LastPayment = entity.LastPaymentDate,
-                PaymentDaysLimit = entity.PaymentDaysLimit,
-                AmountMinimum = entity.AmountMinimum,
-                AmountNoInterests = entity.AmountNoInterest,
-                TotalDebt = entity.TotalDebt,
-                CreateDate = entity.CreatedDate,
-                LastUpdatedDate = entity.LastPaymentDate,
-                NextPaymentDueDate = entity.LastPaymentDate.AddMonths(1),
-                Active = entity.Active
-            };
+            var model = _mapper.Map<CreditBucketModel>(entity);
             ans.Add(model);
         }
         return ans;
@@ -102,8 +88,7 @@ public class CreditBucketService : ICreditBucketService
     {
         var entity = _unitOfWork.BucketRepository.Get(b => b.Active && b.Id == id).FirstOrDefault();
         
-        var ans = _creditBucketModels.FirstOrDefault(cb => cb.Id == id && cb.Active); 
-        return ans;
+        return _mapper.Map<CreditBucketModel>(entity);
     }
 
     public CreditBucketModel? CreateBucket(CreditBucketModel creditBucket)

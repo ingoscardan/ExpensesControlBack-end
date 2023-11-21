@@ -1,4 +1,5 @@
 using ExpensesControl.API.Models;
+using ExpensesControl.DataModelManager.Models;
 
 namespace ExpensesControl.API.ExtensionModelMethods;
 

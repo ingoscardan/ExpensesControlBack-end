@@ -1,5 +1,6 @@
 using AutoMapper;
 using ExpensesControl.API.Models;
+using ExpensesControl.DataModelManager.Models;
 using ExpensesControl.Rdb;
 using ExpensesControl.Rdb.Entities;
 
@@ -74,7 +75,7 @@ public class CreditBucketService : ICreditBucketService
     }
     public IList<CreditBucketModel> Get()
     {
-        var entities = _unitOfWork.BucketRepository.Get();
+        var entities = _unitOfWork.BucketsRepository.Get();
         var ans = new List<CreditBucketModel>();
         foreach (var entity in entities)
         {
@@ -86,31 +87,15 @@ public class CreditBucketService : ICreditBucketService
 
     public CreditBucketModel? Get(int id)
     {
-        var entity = _unitOfWork.BucketRepository.Get(b => b.Active && b.Id == id).FirstOrDefault();
+        var entity = _unitOfWork.BucketsRepository.Get(b => b.Active && b.Id == id).FirstOrDefault();
         
         return _mapper.Map<CreditBucketModel>(entity);
     }
 
     public CreditBucketModel? CreateBucket(CreditBucketModel creditBucket)
     {
-        var entity = new BucketEntity()
-        {
-            Active = creditBucket.Active,
-            Available = creditBucket.Available,
-            AmountMinimum = creditBucket.AmountMinimum,
-            TotalDebt = creditBucket.TotalDebt,
-            Balance = creditBucket.Balance,
-            CutDate = creditBucket.CutDate,
-            LastUpdatedDate = creditBucket.LastUpdatedDate,
-            PaymentDaysLimit = creditBucket.PaymentDaysLimit,
-            Name = creditBucket.Name,
-            Id = creditBucket.Id,
-            CreatedDate = creditBucket.CreateDate,
-            LastPaymentDate = creditBucket.LastPayment,
-            AmountNoInterest = creditBucket.AmountNoInterests,
-            BucketType = BucketTypeEnum.CreditBucket
-        };
-        _unitOfWork.BucketRepository.Insert(entity);
+        var entity = _mapper.Map<BucketEntity>(creditBucket);
+        _unitOfWork.BucketsRepository.Insert(entity);
         _unitOfWork.Save();
         return null;
     }

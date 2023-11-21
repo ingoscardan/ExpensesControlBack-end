@@ -11,9 +11,13 @@ public class PgSqlDbContext : DbContext
         
     }
     public DbSet<BucketEntity> Buckets { get; set; }
+    public DbSet<MovementEntity> Movements { get; set; }
+    public DbSet<BillEntity> Bills { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         new BucketEntityConfiguration().Configure(modelBuilder.Entity<BucketEntity>());
+        new MovementEntityConfigurations().Configure(modelBuilder.Entity<MovementEntity>());
+        new BillEntityConfiguration().Configure(modelBuilder.Entity<BillEntity>());
     }
 }

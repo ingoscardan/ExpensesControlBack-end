@@ -1,4 +1,4 @@
-namespace ExpensesControl.API.Models;
+namespace ExpensesControl.DataModelManager.Models;
 
 /// <summary>
 /// The representation of a Credit Bucket that can be a credit card, a departmental credit or any other credit 

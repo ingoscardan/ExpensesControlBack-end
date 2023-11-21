@@ -1,5 +1,6 @@
 using ExpensesControl.API.Models;
 using ExpensesControl.API.Services;
+using ExpensesControl.DataModelManager.Models;
 
 namespace ExpensesControl.API.HelperFunctions;
 

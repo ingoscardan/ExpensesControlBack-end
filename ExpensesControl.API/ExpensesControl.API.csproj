@@ -26,11 +26,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Mappers\" />
       <Folder Include="PersistantServices\" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\ExpensesControl.Rdb\ExpensesControl.Rdb.csproj" />
+      <ProjectReference Include="..\ExpensesControl.Services\ExpensesControl.Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>

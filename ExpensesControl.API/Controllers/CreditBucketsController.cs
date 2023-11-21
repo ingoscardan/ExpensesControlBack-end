@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ExpensesControl.API.Models;
 using ExpensesControl.API.Services;
+using ExpensesControl.DataModelManager.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

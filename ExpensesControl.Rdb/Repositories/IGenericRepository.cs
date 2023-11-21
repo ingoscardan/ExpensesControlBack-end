@@ -10,8 +10,8 @@ public interface IGenericRepository<TEntity> where TEntity:class
         string includeProperties = "");
 
     TEntity GetById(object id);
-    void Insert(TEntity entity);
+    TEntity Insert(TEntity entity);
     void Delete(object id);
     void Delete(TEntity entityToDelete);
-    void Update(TEntity entityToUpdate);
+    TEntity Update(TEntity entityToUpdate);
 }

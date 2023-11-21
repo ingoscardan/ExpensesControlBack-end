@@ -6,7 +6,7 @@ namespace ExpensesControl.Rdb.Repositories;
 public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
 {
     private readonly PgSqlDbContext _dbContext;
-    private readonly DbSet<TEntity> _dbSet;
+    protected readonly DbSet<TEntity> _dbSet;
 
     public GenericRepository(PgSqlDbContext dbContext)
     {
@@ -31,14 +31,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
             query = query.Include(includeProperty);
         }
 
-        if (orderBy != null)
-        {
-            return orderBy(query).ToList();
-        }
-        else
-        {
-            return query.ToList();
-        }
+        return orderBy != null ? orderBy(query).ToList() : query.ToList();
     }
 
     public virtual TEntity GetById(object id)
@@ -46,9 +39,9 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         return _dbSet.Find(id);
     }
 
-    public virtual void Insert(TEntity entity)
+    public virtual TEntity Insert(TEntity entity)
     {
-        _dbSet.Add(entity);
+        return _dbSet.Add(entity).Entity;
     }
 
     public virtual void Delete(object id)
@@ -66,9 +59,10 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         _dbSet.Remove(entityToDelete);
     }
 
-    public void Update(TEntity entityToUpdate)
+    public virtual TEntity Update(TEntity entityToUpdate)
     {
         _dbSet.Attach(entityToUpdate);
         _dbContext.Entry(entityToUpdate).State = EntityState.Modified;
+        return entityToUpdate;
     }
 }

@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using ExpensesControl.API.Models;
 using ExpensesControl.DataModelManager.Models;
 using ExpensesControl.Services.IServices;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpensesControl.API.Controllers
@@ -14,15 +11,25 @@ namespace ExpensesControl.API.Controllers
     public class BillsController : ControllerBase
     {
         private readonly IBillService _billService;
-        public BillsController(IBillService billService)
+        private readonly IMapper _mapper;
+        public BillsController(IBillService billService, IMapper mapper)
         {
             _billService = billService;
+            _mapper = mapper;
         }
         
         [HttpGet]
         public IEnumerable<BillModel> Get()
         {
             return _billService.Get();
+        }
+
+        [HttpPost]
+        public bool Create(BillDto bill)
+        {
+            var billModel = _mapper.Map<BillDto, BillModel>(bill);
+            _billService.Create(billModel);
+            return true;
         }
     }
 }

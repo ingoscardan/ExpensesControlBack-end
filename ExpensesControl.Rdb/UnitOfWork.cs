@@ -5,7 +5,7 @@ namespace ExpensesControl.Rdb;
 
 public class UnitOfWork
 {
-    private PgSqlDbContext _dbContext;
+    private readonly PgSqlDbContext _dbContext;
     private IGenericRepository<BucketEntity>? _bucketRepository;
     private BillRepository? _billRepository;
     

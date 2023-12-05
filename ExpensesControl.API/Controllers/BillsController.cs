@@ -24,11 +24,32 @@ namespace ExpensesControl.API.Controllers
             return _billService.Get();
         }
 
+        [HttpGet("from/{startDate:datetime}/to/{endDate:datetime}")]
+        public IEnumerable<BillModel> GetBetweenDates(DateTime startDate, DateTime endDate)
+        {
+            return _billService.GetBetweenDates(startDate, endDate);
+        }
+
         [HttpPost]
         public bool Create(BillDto bill)
         {
             var billModel = _mapper.Map<BillDto, BillModel>(bill);
             _billService.Create(billModel);
+            return true;
+        }
+        
+        [HttpPut]
+        public bool Update(BillDto bill)
+        {
+            var billModel = _mapper.Map<BillDto, BillModel>(bill);
+            _billService.Update(billModel);
+            return true;
+        }
+        
+        [HttpPatch("/{billId}/")]
+        public bool UpdateName(int billId, [FromBody]string newName)
+        {
+            _billService.ChangeName(billId, newName);
             return true;
         }
     }

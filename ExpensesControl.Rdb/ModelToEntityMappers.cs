@@ -9,5 +9,6 @@ public class ModelToEntityMappers : Profile
     public ModelToEntityMappers()
     {
         CreateMap<BucketEntity, BucketModel>();
+        CreateMap<BucketModel, BucketEntity>();
     }
 }

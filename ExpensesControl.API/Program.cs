@@ -19,6 +19,7 @@ builder.Services.AddScoped<ICreditBucketService, CreditBucketService>();
 builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(ModelToEntity)));
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();

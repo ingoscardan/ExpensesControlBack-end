@@ -6,7 +6,7 @@ namespace ExpensesControl.DataModelManager.Models;
 public abstract class BaseModel
 {
     public int Id { get; set; }
-    public DateTime CreateDate { get; set; }
+    public DateTime CreatedDate { get; set; }
     public DateTime LastUpdatedDate { get; set; }
     public bool Active { get; set; }
 }

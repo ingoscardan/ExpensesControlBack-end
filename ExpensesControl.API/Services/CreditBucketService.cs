@@ -33,7 +33,7 @@ public class CreditBucketService : ICreditBucketService
                 NextPaymentDueDate = new DateTime(2023, 9, 1).AddDays(20),
                 LastPayment = new DateTime(2023, 8, 21),
                 Active = true,
-                CreateDate = new DateTime(),
+                CreatedDate = new DateTime(),
                 LastUpdatedDate = new DateTime()
             },
             new CreditBucketModel()
@@ -51,7 +51,7 @@ public class CreditBucketService : ICreditBucketService
                 NextPaymentDueDate = new DateTime(2023, 9, 1).AddDays(20),
                 LastPayment = new DateTime(2023, 8, 21),
                 Active = true,
-                CreateDate = new DateTime(),
+                CreatedDate = new DateTime(),
                 LastUpdatedDate = new DateTime()
             },new CreditBucketModel()
             {
@@ -68,7 +68,7 @@ public class CreditBucketService : ICreditBucketService
                 NextPaymentDueDate = new DateTime(2023, 9, 1).AddDays(20),
                 LastPayment = new DateTime(2023, 8, 21),
                 Active = true,
-                CreateDate = new DateTime(),
+                CreatedDate = new DateTime(),
                 LastUpdatedDate = new DateTime()
             }
         };

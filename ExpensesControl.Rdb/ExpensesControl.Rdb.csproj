@@ -43,4 +43,8 @@
       <ProjectReference Include="..\ExpensesControl.DataModelManager\ExpensesControl.DataModelManager.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="EntityExtensionMethods\" />
+    </ItemGroup>
+
 </Project>

@@ -36,7 +36,8 @@ public class BillService : IBillService
         var entity = _mapper.Map<BillModel, BillEntity>(model);
         var result = _unitOfWork.BillsRepository.Insert(entity);
         _unitOfWork.Save();
-        return _mapper.Map<BillEntity, BillModel>(result);
+        if (result != null) return _mapper.Map<BillEntity, BillModel>(result);
+        return model;
     }
 
     public BillModel Update(BillModel model)
@@ -56,7 +57,8 @@ public class BillService : IBillService
         
         billEntity = _unitOfWork.BillsRepository.Update(billEntity);
         _unitOfWork.Save();
-        return _mapper.Map<BillEntity, BillModel>(billEntity);
+        if (billEntity != null) return _mapper.Map<BillEntity, BillModel>(billEntity);
+        return model;
     }
 
     public void Delete(object id)
@@ -71,12 +73,8 @@ public class BillService : IBillService
 
     public IEnumerable<BillModel> GetBetweenDates(DateTime startDate, DateTime? endDate)
     {
-        if (endDate == null)
-        {
-            endDate = DateTime.Now;
-        }
-
-        var result = _unitOfWork.BillsRepository.Get(b => b.Active && b.DueDate >= startDate && b.DueDate <= endDate);
+        endDate ??= DateTime.Now;
+        var result = await _unitOfWork.BillsRepository.GetAsync(b => b.Active && b.DueDate >= startDate && b.DueDate <= endDate);
         return _mapper.Map<IEnumerable<BillEntity>, IEnumerable<BillModel>>(result);
 
     }
@@ -105,7 +103,65 @@ public class BillService : IBillService
         throw new NotImplementedException();
     }
 
-    public void Pay(int billId, MovementModel payment)
+    public string Charge(BillModel model, MovementModel movement)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<string> ChargeAsync(BillModel model, MovementModel movement)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<string> Pay(BillModel model, BucketModel bucket, MovementModel movement)
+    {
+        var modelEntity = await _unitOfWork.BillsRepository.GetByIdAsync(model.Id);
+        if (modelEntity == null)
+        {
+            throw new ArgumentException("The model doesn't exists");
+        }
+        model = _mapper.Map<BillEntity, BillModel>(modelEntity);
+        
+        var bucketEntity = _unitOfWork.BucketsRepository.GetById(bucket.Id);
+        if (bucketEntity == null)
+        {
+            throw new ArgumentException("Bucket doesn't exists");
+        }
+        bucket = _mapper.Map<BucketEntity, BucketModel>(bucketEntity);
+        
+        var now = DateTime.Now;
+        var trackerId = Guid.NewGuid();
+        
+        var chargeToBucketMovement = new MovementModel()
+        {
+            Active = true,
+            Amount = movement.Amount,
+            Type = MovementType.Charge,
+            MovementTracker = trackerId,
+            ApplicationDate = movement.ApplicationDate,
+            CreatedDate = now,
+            LastUpdatedDate = now
+        };
+        
+        // Validate the charge
+        if (bucket.Balance < movement.Amount)
+        {
+            throw new ArgumentException("Not enough to charge the bucket");
+        }
+        
+        // Create the movement in the db by creating the relation between the bill and the movement
+        chargeToBucketMovement = _unitOfWork.BillsMovementsRepository.PayBill(model, chargeToBucketMovement);
+        
+        // Create the payment
+        
+        // Validate the payment
+        
+        // Return the tracker as a string
+        
+        throw new NotImplementedException();
+    }
+
+    public Task<string> PayAsync(BillModel model, MovementModel movement)
     {
         throw new NotImplementedException();
     }
